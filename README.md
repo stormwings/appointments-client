@@ -2,6 +2,57 @@
 
 Medical appointments management system following the FHIR R4 Appointments specification. Frontend built with Next.js 16 that connects to a NestJS backend API.
 
+## FHIR R4 Compliance
+
+This application fully complies with the **HL7 FHIR R4 Appointment Resource** specification ([https://hl7.org/fhir/R4/appointment.html](https://hl7.org/fhir/R4/appointment.html)), which is the international standard for healthcare interoperability.
+
+### Supported FHIR R4 Fields
+
+The `Appointment` interface in `lib/appointments.ts` implements the complete FHIR R4 Appointment resource structure:
+
+**Required Fields:**
+- `id` - Logical identifier
+- `resourceType` - Always "Appointment"
+- `status` - Current appointment status (proposed, pending, booked, arrived, fulfilled, cancelled, noshow, entered-in-error, checked-in, waitlist)
+- `participant[]` - List of participants with actor, status, and required fields
+
+**Optional Fields (all supported):**
+- `meta` - Metadata (versionId, lastUpdated)
+- `identifier[]` - Business identifiers for the appointment
+- `cancelationReason` - CodeableConcept for cancellation reason
+- `serviceCategory[]` - Broad categorization of the service
+- `serviceType[]` - Specific service types being performed
+- `specialty[]` - Medical specialties required
+- `appointmentType` - Style of appointment (e.g., walk-in, phone, routine)
+- `reasonCode[]` - Coded reasons for the appointment
+- `reasonReference[]` - References to reasons (Condition, Procedure, etc.)
+- `priority` - Urgency of the appointment (unsigned int)
+- `description` - Human-readable description
+- `supportingInformation[]` - Additional information supporting the appointment
+- `start` - Start time (ISO 8601 datetime)
+- `end` - End time (ISO 8601 datetime)
+- `minutesDuration` - Duration in minutes
+- `slot[]` - Slots reserved for the appointment
+- `created` - Date/time the appointment was created
+- `comment` - Additional comments
+- `patientInstruction` - Detailed instructions for the patient
+- `basedOn[]` - Service requests that originated this appointment
+- `requestedPeriod[]` - Potential date/time intervals requested
+
+### FHIR R4 Data Types
+
+The application includes proper TypeScript definitions for all FHIR R4 data types used:
+
+- `Identifier` - Business identifier with use, type, system, value, period, and assigner
+- `CodeableConcept` - Concept with coding array and human-readable text
+- `Coding` - Individual code from a terminology system
+- `Reference` - Reference to another FHIR resource
+- `Period` - Time period with start and end dates
+
+### Backward Compatibility
+
+All FHIR R4 fields beyond the required ones are optional, ensuring backward compatibility with existing implementations. The application can work with minimal appointment data while supporting the full FHIR R4 specification when needed.
+
 ## Technologies
 
 - **Next.js 16.0.3** with App Router
