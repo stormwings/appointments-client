@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { appointmentsApi } from "@/lib/api";
 import AppointmentCard from "@/components/AppointmentCard";
 import FilterBar from "@/components/FilterBar";
@@ -84,7 +85,9 @@ export default async function Home({
               </div>
 
               <div className="mt-3">
-                <FilterBar />
+                <Suspense fallback={<FilterBarSkeleton />}>
+                  <FilterBar />
+                </Suspense>
               </div>
             </section>
 
@@ -150,17 +153,40 @@ export default async function Home({
                     ))}
                   </div>
 
-                  <Pagination
-                    currentPage={appointments.page}
-                    totalPages={appointments.totalPages}
-                    total={appointments.total}
-                  />
+                  <Suspense fallback={<div className="h-12" />}>
+                    <Pagination
+                      currentPage={appointments.page}
+                      totalPages={appointments.totalPages}
+                      total={appointments.total}
+                    />
+                  </Suspense>
                 </>
               )}
             </section>
           </main>
         </div>
       </div>
+    </div>
+  );
+}
+
+function FilterBarSkeleton() {
+  const baseChip =
+    "inline-flex items-center rounded-full border px-3.5 py-1.5 text-[11px] font-semibold whitespace-nowrap";
+
+  return (
+    <div className="flex items-center gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
+      <div className={`${baseChip} border-slate-200 bg-slate-100 animate-pulse`}>
+        <span className="opacity-0">All</span>
+      </div>
+      <div className={`${baseChip} border-slate-200 bg-slate-100 animate-pulse`}>
+        <span className="opacity-0">Todas</span>
+      </div>
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className={`${baseChip} border-slate-200 bg-slate-100 animate-pulse`}>
+          <span className="opacity-0">Loading</span>
+        </div>
+      ))}
     </div>
   );
 }
