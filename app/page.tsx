@@ -14,11 +14,13 @@ type HomeSearchParams = {
 export default async function Home({
   searchParams,
 }: {
-  searchParams?: HomeSearchParams;
+  searchParams?: Promise<HomeSearchParams>;
 }) {
-  const status = searchParams?.status ?? "";
+  const resolvedParams = await searchParams;
 
-  const rawPageStr = searchParams?.page ?? "1";
+  const status = resolvedParams?.status ?? "";
+
+  const rawPageStr = resolvedParams?.page ?? "1";
   const rawPage = parseInt(rawPageStr, 10);
   const page = !Number.isNaN(rawPage) && rawPage > 0 ? rawPage : 1;
 
