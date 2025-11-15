@@ -1,3 +1,5 @@
+import { DATE_FORMAT_CONFIG } from './constants';
+
 /**
  * FHIR Appointment status types
  * @see https://www.hl7.org/fhir/valueset-appointmentstatus.html
@@ -191,8 +193,8 @@ export function formatDateTime(value?: string): string {
   if (!value) return 'No definido';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat('es-AR', {
-    dateStyle: 'short',
-    timeStyle: 'short',
+  return new Intl.DateTimeFormat(DATE_FORMAT_CONFIG.LOCALE, {
+    dateStyle: DATE_FORMAT_CONFIG.DATE_STYLE,
+    timeStyle: DATE_FORMAT_CONFIG.TIME_STYLE,
   }).format(date);
 }

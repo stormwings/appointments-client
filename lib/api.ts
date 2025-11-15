@@ -5,6 +5,7 @@ import {
   CreateAppointmentPayload,
 } from './appointments';
 import type { TypedRequestInit } from './types';
+import { API_CONFIG } from './constants';
 
 export class ApiError extends Error {
   constructor(
@@ -64,7 +65,7 @@ async function request<T>(
   init?: TypedRequestInit,
 ): Promise<T> {
   const controller = new AbortController();
-  const timeout: number = init?.timeoutMs ?? 15000;
+  const timeout: number = init?.timeoutMs ?? API_CONFIG.DEFAULT_TIMEOUT_MS;
   const id: NodeJS.Timeout = setTimeout(() => controller.abort(), timeout);
   const apiBaseUrl: string = getApiBaseUrl();
   try {
