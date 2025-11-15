@@ -21,6 +21,41 @@ export type ParticipantRequired =
   | 'optional'
   | 'information-only';
 
+// FHIR R4 Data Types
+export interface Identifier {
+  use?: 'usual' | 'official' | 'temp' | 'secondary' | 'old';
+  type?: CodeableConcept;
+  system?: string;
+  value?: string;
+  period?: Period;
+  assigner?: Reference;
+}
+
+export interface CodeableConcept {
+  coding?: Coding[];
+  text?: string;
+}
+
+export interface Coding {
+  system?: string;
+  version?: string;
+  code?: string;
+  display?: string;
+  userSelected?: boolean;
+}
+
+export interface Reference {
+  reference?: string;
+  type?: string;
+  identifier?: Identifier;
+  display?: string;
+}
+
+export interface Period {
+  start?: string;
+  end?: string;
+}
+
 export interface AppointmentParticipantActor {
   reference?: string;
   type?: string;
@@ -28,9 +63,11 @@ export interface AppointmentParticipantActor {
 }
 
 export interface AppointmentParticipant {
+  type?: CodeableConcept[];
   actor?: AppointmentParticipantActor;
   status: ParticipantStatus;
   required?: ParticipantRequired;
+  period?: Period;
 }
 
 export interface AppointmentMeta {
@@ -42,23 +79,68 @@ export interface Appointment {
   id: string;
   resourceType: 'Appointment';
   meta?: AppointmentMeta;
+  // Business identifiers
+  identifier?: Identifier[];
   status: AppointmentStatus;
+  // Cancellation reason (coded)
+  cancelationReason?: CodeableConcept;
+  // Broad categorization of service
+  serviceCategory?: CodeableConcept[];
+  // Specific service type(s)
+  serviceType?: CodeableConcept[];
+  // Medical specialty of practitioner
+  specialty?: CodeableConcept[];
+  // Style of appointment or patient (e.g., walk-in, phone, routine)
+  appointmentType?: CodeableConcept;
+  // Coded reason for appointment
+  reasonCode?: CodeableConcept[];
+  // Reference to reason for appointment
+  reasonReference?: Reference[];
+  // Priority of appointment (unsigned int, typically 0 for low priority)
+  priority?: number;
   description?: string;
+  // Additional info to support the appointment
+  supportingInformation?: Reference[];
   start?: string;
   end?: string;
   minutesDuration?: number;
+  // Slots reserved for this appointment
+  slot?: Reference[];
+  // Date/time appointment was created
+  created?: string;
   comment?: string;
+  // Instructions for patient
+  patientInstruction?: string;
+  // Service request that originated this appointment
+  basedOn?: Reference[];
   participant: AppointmentParticipant[];
+  // Potential date/time intervals requested for appointment
+  requestedPeriod?: Period[];
 }
 
 export interface CreateAppointmentPayload {
+  identifier?: Identifier[];
   status: AppointmentStatus;
+  cancelationReason?: CodeableConcept;
+  serviceCategory?: CodeableConcept[];
+  serviceType?: CodeableConcept[];
+  specialty?: CodeableConcept[];
+  appointmentType?: CodeableConcept;
+  reasonCode?: CodeableConcept[];
+  reasonReference?: Reference[];
+  priority?: number;
   description?: string;
+  supportingInformation?: Reference[];
   start?: string;
   end?: string;
   minutesDuration?: number;
+  slot?: Reference[];
+  created?: string;
   comment?: string;
+  patientInstruction?: string;
+  basedOn?: Reference[];
   participant: AppointmentParticipant[];
+  requestedPeriod?: Period[];
 }
 
 export interface AppointmentsListResponse {
