@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { Appointment, AppointmentsListResponse } from '@/lib/appointments';
+import type { ErrorResponse } from '@/lib/types';
 
 const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:8000';
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse<AppointmentsListResponse | ErrorResponse>> {
   try {
     const searchParams = request.nextUrl.searchParams;
     const queryString = searchParams.toString();
@@ -35,7 +37,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse<Appointment | ErrorResponse>> {
   try {
     const body = await request.json();
 

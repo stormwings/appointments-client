@@ -16,11 +16,11 @@ export const viewport = {
   colorScheme: "light dark",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+}
+
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="es">
       <body className={poppins.className + " bg-slate-100"}>{children}</body>

@@ -11,20 +11,20 @@ import {
 } from "@/lib/appointments";
 import { appointmentsApi } from "@/lib/api";
 
-interface Props {
+interface StatusActionsProps {
   appointmentId: string;
   currentStatus: AppointmentStatus;
 }
 
-export default function StatusActions({ appointmentId, currentStatus }: Props) {
+export default function StatusActions({ appointmentId, currentStatus }: StatusActionsProps) {
   const router = useRouter();
   const [status, setStatus] = useState<AppointmentStatus>(currentStatus);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const allowedNext = APPOINTMENT_STATUS_TRANSITIONS[currentStatus] || [];
+  const allowedNext: AppointmentStatus[] = APPOINTMENT_STATUS_TRANSITIONS[currentStatus] || [];
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateStatus = async (): Promise<void> => {
     if (status === currentStatus) return;
     setLoading(true);
     setError(null);
@@ -42,7 +42,7 @@ export default function StatusActions({ appointmentId, currentStatus }: Props) {
     }
   };
 
-  const handleCancel = async () => {
+  const handleCancel = async (): Promise<void> => {
     if (!canCancelAppointment(currentStatus)) return;
 
     const confirmCancel = window.confirm(

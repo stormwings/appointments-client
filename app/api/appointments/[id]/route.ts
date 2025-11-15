@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { Appointment } from '@/lib/appointments';
+import type { ErrorResponse, RouteContext } from '@/lib/types';
 
 const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:8000';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: RouteContext<{ id: string }>
+): Promise<NextResponse<Appointment | ErrorResponse>> {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
 
     const response = await fetch(`${BACKEND_API_URL}/appointments/${id}`, {
       method: 'GET',
@@ -38,10 +40,10 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: RouteContext<{ id: string }>
+): Promise<NextResponse<null | ErrorResponse>> {
   try {
-    const { id } = await params;
+    const { id } = await context.params;
 
     const response = await fetch(`${BACKEND_API_URL}/appointments/${id}`, {
       method: 'DELETE',

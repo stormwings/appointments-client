@@ -1,21 +1,18 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { PaginationMeta } from "@/lib/types";
 
-interface Props {
-  currentPage: number;
-  totalPages: number;
-  total: number;
-}
+interface PaginationProps extends PaginationMeta {}
 
-export default function Pagination({ currentPage, totalPages, total }: Props) {
+export default function Pagination({ currentPage, totalPages, total }: PaginationProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   if (totalPages <= 1) return null;
 
-  const changePage = (page: number) => {
+  const changePage = (page: number): void => {
     const next = Math.max(1, Math.min(totalPages, page));
     if (next === currentPage) return;
 

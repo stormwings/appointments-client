@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { Appointment } from '@/lib/appointments';
+import type { ErrorResponse, RouteContext, UpdateStatusPayload } from '@/lib/types';
 
 const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:8000';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  context: RouteContext<{ id: string }>
+): Promise<NextResponse<Appointment | ErrorResponse>> {
   try {
-    const { id } = await params;
-    const body = await request.json();
+    const { id } = await context.params;
+    const body: UpdateStatusPayload = await request.json();
 
     const response = await fetch(`${BACKEND_API_URL}/appointments/${id}/status`, {
       method: 'PATCH',

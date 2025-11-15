@@ -26,7 +26,11 @@ const STATUS_STYLES: Record<AppointmentStatus, string> = {
   waitlist: "bg-indigo-50 text-indigo-700 border-indigo-200",
 };
 
-export default function StatusBadge({ status }: { status: AppointmentStatus }) {
+interface StatusBadgeProps {
+  status: AppointmentStatus;
+}
+
+export default function StatusBadge({ status }: StatusBadgeProps) {
   const label = STATUS_LABELS[status] ?? status;
   const style =
     STATUS_STYLES[status] ?? "bg-slate-100 text-slate-600 border-slate-200";

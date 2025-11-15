@@ -1,3 +1,7 @@
+/**
+ * FHIR Appointment status types
+ * @see https://www.hl7.org/fhir/valueset-appointmentstatus.html
+ */
 export type AppointmentStatus =
   | 'proposed'
   | 'pending'
@@ -10,34 +14,52 @@ export type AppointmentStatus =
   | 'entered-in-error'
   | 'waitlist';
 
+/**
+ * Participant status for an appointment
+ */
 export type ParticipantStatus =
   | 'accepted'
   | 'declined'
   | 'tentative'
   | 'needs-action';
 
+/**
+ * Whether the participant is required for the appointment
+ */
 export type ParticipantRequired =
   | 'required'
   | 'optional'
   | 'information-only';
 
+/**
+ * Actor (patient, practitioner, etc.) participating in the appointment
+ */
 export interface AppointmentParticipantActor {
   reference?: string;
   type?: string;
   display?: string;
 }
 
+/**
+ * Participant in an appointment
+ */
 export interface AppointmentParticipant {
   actor?: AppointmentParticipantActor;
   status: ParticipantStatus;
   required?: ParticipantRequired;
 }
 
+/**
+ * Metadata about the appointment resource
+ */
 export interface AppointmentMeta {
   versionId?: string;
   lastUpdated?: string;
 }
 
+/**
+ * FHIR Appointment resource
+ */
 export interface Appointment {
   id: string;
   resourceType: 'Appointment';
@@ -51,6 +73,9 @@ export interface Appointment {
   participant: AppointmentParticipant[];
 }
 
+/**
+ * Payload for creating a new appointment
+ */
 export interface CreateAppointmentPayload {
   status: AppointmentStatus;
   description?: string;
@@ -61,6 +86,9 @@ export interface CreateAppointmentPayload {
   participant: AppointmentParticipant[];
 }
 
+/**
+ * Paginated response for appointments list
+ */
 export interface AppointmentsListResponse {
   data: Appointment[];
   page: number;
@@ -69,6 +97,9 @@ export interface AppointmentsListResponse {
   totalPages: number;
 }
 
+/**
+ * Human-readable labels for appointment statuses (Spanish)
+ */
 export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
   proposed: 'Propuesta',
   pending: 'Pendiente',
@@ -82,6 +113,9 @@ export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
   waitlist: 'Lista de espera',
 };
 
+/**
+ * Status options for use in select/dropdown components
+ */
 export const APPOINTMENT_STATUS_OPTIONS = ([
   'proposed',
   'pending',
@@ -98,6 +132,10 @@ export const APPOINTMENT_STATUS_OPTIONS = ([
   label: APPOINTMENT_STATUS_LABELS[value],
 }));
 
+/**
+ * Valid status transitions for appointments
+ * Maps current status to allowed next statuses
+ */
 export const APPOINTMENT_STATUS_TRANSITIONS: Record<
   AppointmentStatus,
   AppointmentStatus[]
@@ -114,6 +152,9 @@ export const APPOINTMENT_STATUS_TRANSITIONS: Record<
   'entered-in-error': [],
 };
 
+/**
+ * Terminal appointment statuses that cannot be changed
+ */
 export const TERMINAL_APPOINTMENT_STATUSES: AppointmentStatus[] = [
   'fulfilled',
   'cancelled',
@@ -121,6 +162,9 @@ export const TERMINAL_APPOINTMENT_STATUSES: AppointmentStatus[] = [
   'entered-in-error',
 ];
 
+/**
+ * Statuses that allow appointment cancellation
+ */
 const CANCELLABLE_STATUSES: AppointmentStatus[] = [
   'proposed',
   'pending',
@@ -129,10 +173,20 @@ const CANCELLABLE_STATUSES: AppointmentStatus[] = [
   'checked-in',
 ];
 
+/**
+ * Checks if an appointment with the given status can be cancelled
+ * @param status - Current appointment status
+ * @returns True if appointment can be cancelled
+ */
 export function canCancelAppointment(status: AppointmentStatus): boolean {
   return CANCELLABLE_STATUSES.includes(status);
 }
 
+/**
+ * Formats an ISO date string to a human-readable format (Spanish locale)
+ * @param value - ISO date string
+ * @returns Formatted date string or fallback text
+ */
 export function formatDateTime(value?: string): string {
   if (!value) return 'No definido';
   const date = new Date(value);

@@ -11,11 +11,11 @@ export default function FilterBar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const currentStatus = (searchParams.get("status") || "") as
+  const currentStatus: AppointmentStatus | "" = (searchParams.get("status") || "") as
     | AppointmentStatus
     | "";
 
-  const handleChange = (value: string) => {
+  const handleChange = (value: string): void => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (value) {

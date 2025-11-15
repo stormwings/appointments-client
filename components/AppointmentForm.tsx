@@ -6,7 +6,11 @@ import { appointmentsApi } from "@/lib/api";
 import {
   AppointmentStatus,
   APPOINTMENT_STATUS_OPTIONS,
+  CreateAppointmentPayload,
+  ParticipantStatus,
+  ParticipantRequired,
 } from "@/lib/appointments";
+import type { FormChangeHandler, FormSubmitHandler } from "@/lib/types";
 
 interface FormState {
   description: string;
@@ -33,20 +37,15 @@ const DEFAULT_FORM: FormState = {
 export default function AppointmentForm() {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(DEFAULT_FORM);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleChange = (e: FormChangeHandler) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormSubmitHandler) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -75,7 +74,7 @@ export default function AppointmentForm() {
 
       const patientName = form.patientName.trim() || "Paciente sin nombre";
 
-      const payload = {
+      const payload: CreateAppointmentPayload = {
         status: form.status,
         description: form.description || undefined,
         start,
@@ -88,8 +87,8 @@ export default function AppointmentForm() {
               type: "Patient",
               display: patientName,
             },
-            status: "accepted" as const,
-            required: "required" as const,
+            status: "accepted" as ParticipantStatus,
+            required: "required" as ParticipantRequired,
           },
           ...(form.practitionerName
             ? [
@@ -98,8 +97,8 @@ export default function AppointmentForm() {
                     type: "Practitioner",
                     display: form.practitionerName.trim(),
                   },
-                  status: "accepted" as const,
-                  required: "required" as const,
+                  status: "accepted" as ParticipantStatus,
+                  required: "required" as ParticipantRequired,
                 },
               ]
             : []),
