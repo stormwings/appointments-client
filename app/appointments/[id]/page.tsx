@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { appointmentsApi, ApiError } from '@/lib/api';
 import { Appointment, formatDateTime } from '@/lib/appointments';
+import { PageProps } from '@/lib/types';
 import StatusBadge from '@/components/StatusBadge';
 import StatusActions from '@/components/StatusActions';
 

@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { Appointment, formatDateTime } from "@/lib/appointments";
+import type { Appointment } from "@/lib/appointments";
+import { formatDateTime } from "@/lib/appointments";
 import StatusBadge from "./StatusBadge";
 
-interface Props {
+interface AppointmentCardProps {
   appointment: Appointment;
 }
 
-export default function AppointmentCard({ appointment }: Props) {
+export default function AppointmentCard({ appointment }: AppointmentCardProps) {
   const patient = appointment.participant?.find(
     (p) => p.actor?.type === "Patient"
   );

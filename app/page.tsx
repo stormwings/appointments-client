@@ -160,6 +160,7 @@ export default async function Home({
                       currentPage={appointments.page}
                       totalPages={appointments.totalPages}
                       total={appointments.total}
+                      pageSize={appointments.pageSize}
                     />
                   </Suspense>
                 </>
