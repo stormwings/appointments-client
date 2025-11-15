@@ -70,7 +70,7 @@ async function request<T>(
     } catch {
       return undefined as unknown as T;
     }
-  } catch (err) {
+  } catch {
     clearTimeout(id);
     throw new Error('No se pudo conectar con la API. Intenta nuevamente.');
   }
