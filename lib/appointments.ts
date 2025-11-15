@@ -33,6 +33,40 @@ export type ParticipantRequired =
   | 'optional'
   | 'information-only';
 
+export interface Identifier {
+  use?: 'usual' | 'official' | 'temp' | 'secondary' | 'old';
+  type?: CodeableConcept;
+  system?: string;
+  value?: string;
+  period?: Period;
+  assigner?: Reference;
+}
+
+export interface CodeableConcept {
+  coding?: Coding[];
+  text?: string;
+}
+
+export interface Coding {
+  system?: string;
+  version?: string;
+  code?: string;
+  display?: string;
+  userSelected?: boolean;
+}
+
+export interface Reference {
+  reference?: string;
+  type?: string;
+  identifier?: Identifier;
+  display?: string;
+}
+
+export interface Period {
+  start?: string;
+  end?: string;
+}
+
 /**
  * Actor (patient, practitioner, etc.) participating in the appointment
  */
@@ -46,9 +80,11 @@ export interface AppointmentParticipantActor {
  * Participant in an appointment
  */
 export interface AppointmentParticipant {
+  type?: CodeableConcept[];
   actor?: AppointmentParticipantActor;
   status: ParticipantStatus;
   required?: ParticipantRequired;
+  period?: Period;
 }
 
 /**
@@ -66,26 +102,56 @@ export interface Appointment {
   id: string;
   resourceType: 'Appointment';
   meta?: AppointmentMeta;
+  identifier?: Identifier[];
   status: AppointmentStatus;
+  cancelationReason?: CodeableConcept;
+  serviceCategory?: CodeableConcept[];
+  serviceType?: CodeableConcept[];
+  specialty?: CodeableConcept[];
+  appointmentType?: CodeableConcept;
+  reasonCode?: CodeableConcept[];
+  reasonReference?: Reference[];
+  priority?: number;
   description?: string;
+  supportingInformation?: Reference[];
   start?: string;
   end?: string;
   minutesDuration?: number;
+  slot?: Reference[];
+  created?: string;
   comment?: string;
+  patientInstruction?: string;
+  basedOn?: Reference[];
   participant: AppointmentParticipant[];
+  requestedPeriod?: Period[];
 }
 
 /**
  * Payload for creating a new appointment
  */
 export interface CreateAppointmentPayload {
+  identifier?: Identifier[];
   status: AppointmentStatus;
+  cancelationReason?: CodeableConcept;
+  serviceCategory?: CodeableConcept[];
+  serviceType?: CodeableConcept[];
+  specialty?: CodeableConcept[];
+  appointmentType?: CodeableConcept;
+  reasonCode?: CodeableConcept[];
+  reasonReference?: Reference[];
+  priority?: number;
   description?: string;
+  supportingInformation?: Reference[];
   start?: string;
   end?: string;
   minutesDuration?: number;
+  slot?: Reference[];
+  created?: string;
   comment?: string;
+  patientInstruction?: string;
+  basedOn?: Reference[];
   participant: AppointmentParticipant[];
+  requestedPeriod?: Period[];
 }
 
 /**
